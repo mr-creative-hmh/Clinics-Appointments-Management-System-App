@@ -38,3 +38,4 @@ Route::apiResource("category", CategoryController::class);
 Route::apiResource("clinic", ClinicController::class);
 Route::apiResource("doctorschedule",DoctorScheduleController::class);
 
+//Route::group(['auth:sanctum' => 'role:'], function () { });
