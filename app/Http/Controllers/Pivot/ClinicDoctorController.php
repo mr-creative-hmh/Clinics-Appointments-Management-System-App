@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Pivote;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class ClinicDoctorController extends Controller
 {
