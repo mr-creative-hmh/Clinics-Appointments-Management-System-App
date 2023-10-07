@@ -15,25 +15,26 @@ class RegisterController extends Controller
 {
     use ResponseMessage;
 
-    public function Register(RegisterRequest $request) {
+    public function Register(RegisterRequest $request)
+    {
 
-            $created_user = UserService::CreateUser(
-                $request->name,
-                $request->email,
-                $request->password,
-                $request->phone,
-                $request->mobile,
-                $request->address,
-                $request->date_of_birth,
-                $request->gender
-            );
-            $token = $created_user->createToken("apiToken")->plainTextToken;
+        $created_user = UserService::CreateUser(
+            $request->name,
+            $request->email,
+            $request->password,
+            $request->phone,
+            $request->mobile,
+            $request->address,
+            $request->date_of_birth,
+            $request->gender
+        );
+        $token = $created_user->createToken("apiToken")->plainTextToken;
 
-            $data = [
-                "user" => new UserResource($created_user),
-                "token" => $token
-            ];
+        $data = [
+            "user" => new UserResource($created_user),
+            "token" => $token
+        ];
 
-            return $this->SendResponse("User Created.",$data, 201);
+        return $this->SendResponse("User Created.",$data, 201);
     }
 }

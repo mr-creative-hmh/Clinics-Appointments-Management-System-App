@@ -23,36 +23,34 @@ class PatientController extends Controller
 
     public function index()
     {
-
-            return PatientResource::collection(Patient::all());
-
-
+        return PatientResource::collection(Patient::all());
     }
 
-    public function store(PatientCreateRequest $request) {
+    public function store(PatientCreateRequest $request)
+    {
 
-            $created_patient = RolesService::CreatePatient(
-                $request->name,
-                $request->email,
-                $request->password,
-                $request->phone,
-                $request->mobile,
-                $request->address,
-                $request->date_of_birth,
-                $request->gender,
-                $request->wight ,
-                $request->hight ,
-                $request->additional_info
-            );
+        $created_patient = RolesService::CreatePatient(
+            $request->name,
+            $request->email,
+            $request->password,
+            $request->phone,
+            $request->mobile,
+            $request->address,
+            $request->date_of_birth,
+            $request->gender,
+            $request->wight ,
+            $request->hight ,
+            $request->additional_info
+        );
 
-            $token = $created_patient->user->createToken("apiToken")->plainTextToken;
+        $token = $created_patient->user->createToken("apiToken")->plainTextToken;
 
-            $data = [
-                "Patient" => new PatientResource($created_patient),
-                "token" => $token
-            ];
+        $data = [
+            "Patient" => new PatientResource($created_patient),
+            "token" => $token
+        ];
 
-            return $this->SendResponse("Patient Created.",$data, 201);
+        return $this->SendResponse("Patient Created.",$data, 201);
 
 
     }
@@ -60,34 +58,39 @@ class PatientController extends Controller
     public function show(Patient $patient)
     {
 
-            if (!$patient) {
-                return $this->SendMessage("Patient is incorrect or Not Exisit.", 404);
-            }
-            return new PatientResource($patient);
+        if (is_null($patient)) {
+            return $this->SendMessage("Patient is incorrect or Not Exisit.", 404);
+        }
+        return new PatientResource($patient);
 
     }
 
-    public function update(PatientUpdateRequest $request, Patient $patient) {
+    public function update(PatientUpdateRequest $request, Patient $patient)
+    {
 
-            // Check if the Patient exists
-            if (!$patient) {
-                return $this->SendMessage("Patient is incorrect or does not exist.", 404);
-            }
+        // Check if the Patient exists
+        if (is_null($patient)) {
+            return $this->SendMessage("Patient is incorrect or does not exist.", 404);
+        }
 
-            // Update the patient's data using the RolesService
-            $updatedPatient = RolesService::UpdatePatient($patient, $request);
+        // Update the patient's data using the RolesService
+        $updatedPatient = RolesService::UpdatePatient($patient, $request);
 
-            $data = new PatientResource($updatedPatient);
+        $data = new PatientResource($updatedPatient);
 
-            return $this->SendResponse("Patient Updated.", $data, 200);
+        return $this->SendResponse("Patient Updated.", $data, 200);
 
     }
 
     public function destroy(Patient $patient)
     {
+        // Check if the Patient exists
+        if (is_null($patient)) {
+            return $this->SendMessage("Patient is incorrect or does not exist.", 404);
+        }
 
-            RolesService::DeletePatient($patient);
-            return $this->SendMessage("Patient Deleted.", 200);
+        RolesService::DeletePatient($patient);
+        return $this->SendMessage("Patient Deleted.", 200);
 
     }
 }

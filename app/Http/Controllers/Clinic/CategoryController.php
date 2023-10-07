@@ -28,7 +28,7 @@ class CategoryController extends Controller
 
     public function show(Category $category)
     {
-            if (!$category) {
+            if (is_null($category)) {
                 return $this->SendMessage("category is incorrect or Not Exisit.", 404);
             }
             return new CategoryResource($category);
@@ -47,7 +47,7 @@ class CategoryController extends Controller
     public function update(CategoryUpdateRequest $request, Category $category) {
 
             // Check if the category exists
-            if (!$category) {
+            if (is_null($category)) {
                 return $this->SendMessage("category is incorrect or Not Exisit.", 404);
             }
 

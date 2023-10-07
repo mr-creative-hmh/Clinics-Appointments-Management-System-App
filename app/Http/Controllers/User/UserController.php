@@ -23,39 +23,44 @@ class UserController extends Controller
     public function index()
     {
 
-            return UserResource::collection(User::all());
+        return UserResource::collection(User::all());
 
     }
 
     public function show(User $user)
     {
 
-            if (!$user) {
-                return $this->SendMessage("User is incorrect or Not Exisit.", 404);
-            }
-            return new UserResource($user);
+        if (is_null($user)) {
+            return $this->SendMessage("User is incorrect or Not Exisit.", 404);
+        }
+        return new UserResource($user);
 
     }
 
-    public function update(UserUpdateRequest $request, User $user) {
+    public function update(UserUpdateRequest $request, User $user)
+    {
 
-            // Update the user's data using the validated request data
-            if (!$user) {
-                return $this->SendMessage("User is incorrect or Not Exisit.", 404);
-            }
-            $Updated_user = UserService::UpdateUser( $user ,$request);
+        // Update the user's data using the validated request data
+        if (is_null($user)) {
+            return $this->SendMessage("User is incorrect or Not Exisit.", 404);
+        }
+        $Updated_user = UserService::UpdateUser( $user ,$request);
 
-            $data = new UserResource($Updated_user);
+        $data = new UserResource($Updated_user);
 
-            return $this->SendResponse("User Updated.", $data, 200);
+        return $this->SendResponse("User Updated.", $data, 200);
 
     }
 
     public function destroy(User $user)
     {
+        // Update the user's data using the validated request data
+        if (is_null($user)) {
+            return $this->SendMessage("User is incorrect or Not Exisit.", 404);
+        }
 
-            UserService::DeleteUser($user);
-            return $this->SendMessage("User Deleted.", 200);
+        UserService::DeleteUser($user);
+        return $this->SendMessage("User Deleted.", 200);
 
     }
 }

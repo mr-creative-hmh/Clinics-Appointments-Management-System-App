@@ -25,50 +25,56 @@ class SpecializationController extends Controller
     public function index()
     {
 
-            return SpecializationResource::collection(Specialization::all());
+        return SpecializationResource::collection(Specialization::all());
 
     }
 
     public function show(Specialization $specialization)
     {
 
-            if (!$specialization) {
-                return $this->SendMessage("Specialization is incorrect or Not Exisit.", 404);
-            }
-            return new SpecializationResource($specialization);
+        if (is_null($specialization)) {
+            return $this->SendMessage("Specialization is incorrect or Not Exisit.", 404);
+        }
+        return new SpecializationResource($specialization);
 
     }
 
-    public function store(SpecializationCreateRequest $request) {
+    public function store(SpecializationCreateRequest $request)
+    {
 
-            $created_specialization = RolesService::CreateSpecialization(
-                $request->name,
-            );
-            $data = new SpecializationResource($created_specialization);
-            return $this->SendResponse("Specialization Created.", $data, 201);
+        $created_specialization = RolesService::CreateSpecialization(
+            $request->name,
+        );
+        $data = new SpecializationResource($created_specialization);
+        return $this->SendResponse("Specialization Created.", $data, 201);
 
 
     }
 
-    public function update(SpecializationUpdateRequest $request, Specialization $specialization) {
+    public function update(SpecializationUpdateRequest $request, Specialization $specialization)
+    {
 
-            // Check if the Specialization exists
-            if (!$specialization) {
-                return $this->SendMessage("Specialization is incorrect or Not Exisit.", 404);
-            }
+        // Check if the Specialization exists
+        if (is_null($specialization)) {
+            return $this->SendMessage("Specialization is incorrect or Not Exisit.", 404);
+        }
 
-            $Updated_specialization = RolesService::UpdateSpecialization( $specialization ,$request);
-            $data = new SpecializationResource($Updated_specialization);
+        $Updated_specialization = RolesService::UpdateSpecialization( $specialization ,$request);
+        $data = new SpecializationResource($Updated_specialization);
 
-            return $this->SendResponse("Specialization Updated.", $data, 200);
+        return $this->SendResponse("Specialization Updated.", $data, 200);
 
     }
 
     public function destroy(Specialization $specialization)
     {
+        // Check if the Specialization exists
+        if (is_null($specialization)) {
+            return $this->SendMessage("Specialization is incorrect or Not Exisit.", 404);
+        }
 
-            RolesService::DeleteSpecialization($specialization);
-            return $this->SendMessage("Specialization Deleted.", 200);
+        RolesService::DeleteSpecialization($specialization);
+        return $this->SendMessage("Specialization Deleted.", 200);
 
     }
 }

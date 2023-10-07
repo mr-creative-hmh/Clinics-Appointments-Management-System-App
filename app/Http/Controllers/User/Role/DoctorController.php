@@ -23,36 +23,35 @@ class DoctorController extends Controller
 
     public function index()
     {
-
-            return DoctorResource::collection(Doctor::all());
-
+        return DoctorResource::collection(Doctor::all());
 
     }
 
-    public function store(DoctorCreateRequest $request) {
+    public function store(DoctorCreateRequest $request)
+    {
 
-            $created_doctor = RolesService::CreateDoctor(
-                $request->name,
-                $request->email,
-                $request->password,
-                $request->phone,
-                $request->mobile,
-                $request->address,
-                $request->date_of_birth,
-                $request->gender,
-                $request->specialization_id ,
-                $request->experience ,
-                $request->additional_info
-            );
+        $created_doctor = RolesService::CreateDoctor(
+            $request->name,
+            $request->email,
+            $request->password,
+            $request->phone,
+            $request->mobile,
+            $request->address,
+            $request->date_of_birth,
+            $request->gender,
+            $request->specialization_id ,
+            $request->experience ,
+            $request->additional_info
+        );
 
-            $token = $created_doctor->user->createToken("apiToken")->plainTextToken;
+        $token = $created_doctor->user->createToken("apiToken")->plainTextToken;
 
-            $data = [
-                "Doctor" => new DoctorResource($created_doctor),
-                "token" => $token
-            ];
+        $data = [
+            "Doctor" => new DoctorResource($created_doctor),
+            "token" => $token
+        ];
 
-            return $this->SendResponse("Doctor Created.",$data, 201);
+        return $this->SendResponse("Doctor Created.",$data, 201);
 
 
     }
@@ -60,34 +59,39 @@ class DoctorController extends Controller
     public function show(Doctor $doctor)
     {
 
-            if (!$doctor) {
-                return $this->SendMessage("Doctor is incorrect or Not Exisit.", 404);
-            }
-            return new DoctorResource($doctor);
+        if (is_null($doctor)) {
+            return $this->SendMessage("Doctor is incorrect or Not Exisit.", 404);
+        }
+        return new DoctorResource($doctor);
 
     }
 
-    public function update(DoctorUpdateRequest $request, Doctor $doctor) {
+    public function update(DoctorUpdateRequest $request, Doctor $doctor)
+    {
 
-            // Check if the doctor exists
-            if (!$doctor) {
-                return $this->SendMessage("Doctor is incorrect or does not exist.", 404);
-            }
+        // Check if the doctor exists
+        if (is_null($doctor)) {
+            return $this->SendMessage("Doctor is incorrect or does not exist.", 404);
+        }
 
-            // Update the doctor's data using the RolesService
-            $updatedDoctor = RolesService::UpdateDoctor($doctor, $request);
+        // Update the doctor's data using the RolesService
+        $updatedDoctor = RolesService::UpdateDoctor($doctor, $request);
 
-            $data = new DoctorResource($updatedDoctor);
+        $data = new DoctorResource($updatedDoctor);
 
-            return $this->SendResponse("Doctor Updated.", $data, 200);
+        return $this->SendResponse("Doctor Updated.", $data, 200);
 
     }
 
     public function destroy(Doctor $doctor)
     {
+        // Check if the doctor exists
+        if (is_null($doctor)) {
+            return $this->SendMessage("Doctor is incorrect or does not exist.", 404);
+        }
 
-            RolesService::DeleteDoctor($doctor);
-            return $this->SendMessage("Doctor Deleted.", 200);
+        RolesService::DeleteDoctor($doctor);
+        return $this->SendMessage("Doctor Deleted.", 200);
 
     }
 }

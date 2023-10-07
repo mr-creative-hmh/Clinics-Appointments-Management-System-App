@@ -14,21 +14,22 @@ class LoginController extends Controller
 {
     use ResponseMessage;
 
-    public function Login(LoginRequest $request) {
-           // get user with the request email
-           $user = UserService::GetUserByEmail($request->email);
+    public function Login(LoginRequest $request)
+    {
+        // get user with the request email
+        $user = UserService::GetUserByEmail($request->email);
 
-           if(!$user || !Hash::check($request->password, $user->password)) {
-                return $this->SendMessage("email or password is incorrect.", 401);
-           }
+        if(!$user || !Hash::check($request->password, $user->password)) {
+            return $this->SendMessage("email or password is incorrect.", 401);
+        }
 
-           $token = $user->createToken("apiToken")->plainTextToken;
+        $token = $user->createToken("apiToken")->plainTextToken;
 
-           $data = [
-            "user" => new UserResource($user),
-            "token" => $token
-           ];
+        $data = [
+        "user" => new UserResource($user),
+        "token" => $token
+        ];
 
-           return $this->SendResponse("User Logged In!", $data, 200);
+        return $this->SendResponse("User Logged In!", $data, 200);
     }
 }

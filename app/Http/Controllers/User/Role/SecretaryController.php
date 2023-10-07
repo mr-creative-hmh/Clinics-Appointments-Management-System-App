@@ -24,32 +24,33 @@ class SecretaryController extends Controller
     public function index()
     {
 
-            return SecretaryResource::collection(Secretary::all());
+        return SecretaryResource::collection(Secretary::all());
 
     }
 
-    public function store(SecretaryCreateRequest $request) {
+    public function store(SecretaryCreateRequest $request)
+    {
 
-            $created_Secretary = RolesService::CreateSecretary(
-                $request->name,
-                $request->email,
-                $request->password,
-                $request->phone,
-                $request->mobile,
-                $request->address,
-                $request->date_of_birth,
-                $request->gender,
-                $request->additional_info
-            );
+        $created_Secretary = RolesService::CreateSecretary(
+            $request->name,
+            $request->email,
+            $request->password,
+            $request->phone,
+            $request->mobile,
+            $request->address,
+            $request->date_of_birth,
+            $request->gender,
+            $request->additional_info
+        );
 
-            $token = $created_Secretary->user->createToken("apiToken")->plainTextToken;
+        $token = $created_Secretary->user->createToken("apiToken")->plainTextToken;
 
-            $data = [
-                "Secretary" => new SecretaryResource($created_Secretary),
-                "token" => $token
-            ];
+        $data = [
+            "Secretary" => new SecretaryResource($created_Secretary),
+            "token" => $token
+        ];
 
-            return $this->SendResponse("Secretary Created.",$data, 201);
+        return $this->SendResponse("Secretary Created.",$data, 201);
 
 
     }
@@ -57,34 +58,39 @@ class SecretaryController extends Controller
     public function show(Secretary $secretary)
     {
 
-            if (!$secretary) {
-                return $this->SendMessage("Secretary is incorrect or Not Exisit.", 404);
-            }
-            return new SecretaryResource($secretary);
+        if (is_null($secretary)) {
+            return $this->SendMessage("Secretary is incorrect or Not Exisit.", 404);
+        }
+        return new SecretaryResource($secretary);
 
     }
 
-    public function update(SecretaryUpdateRequest $request, Secretary $secretary) {
+    public function update(SecretaryUpdateRequest $request, Secretary $secretary)
+    {
 
-            // Check if the Secretary exists
-            if (!$secretary) {
-                return $this->SendMessage("Secretary is incorrect or does not exist.", 404);
-            }
+        // Check if the Secretary exists
+        if (is_null($secretary)) {
+            return $this->SendMessage("Secretary is incorrect or does not exist.", 404);
+        }
 
-            // Update the Secretary's data using the RolesService
-            $updatedsecretary = RolesService::UpdateSecretary($secretary, $request);
+        // Update the Secretary's data using the RolesService
+        $updatedsecretary = RolesService::UpdateSecretary($secretary, $request);
 
-            $data = new SecretaryResource($updatedsecretary);
+        $data = new SecretaryResource($updatedsecretary);
 
-            return $this->SendResponse("Secretary Updated.", $data, 200);
+        return $this->SendResponse("Secretary Updated.", $data, 200);
 
     }
 
     public function destroy(Secretary $secretary)
     {
+        // Check if the Secretary exists
+        if (is_null($secretary)) {
+            return $this->SendMessage("Secretary is incorrect or does not exist.", 404);
+        }
 
-            RolesService::DeleteSecretary($secretary);
-            return $this->SendMessage("Secretary Deleted.", 200);
+        RolesService::DeleteSecretary($secretary);
+        return $this->SendMessage("Secretary Deleted.", 200);
 
     }
 }

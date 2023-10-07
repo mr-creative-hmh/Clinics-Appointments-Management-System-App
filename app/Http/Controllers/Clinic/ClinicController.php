@@ -25,46 +25,48 @@ class ClinicController extends Controller
     public function index()
     {
 
-            return ClinicResource::collection(Clinic::all());
+        return ClinicResource::collection(Clinic::all());
 
     }
 
     public function show(Clinic $clinic)
     {
 
-            return new ClinicResource($clinic);
+        return new ClinicResource($clinic);
 
     }
 
-    public function store(ClinicCreateRequest $request) {
+    public function store(ClinicCreateRequest $request)
+    {
 
-            $created_clinic = ClinicService::CreateClinic(
-                $request->name,
-                $request->address,
-                $request->phone,
-                $request->operating_hours,
-                $request->category_id,
-            );
-            $data = new ClinicResource($created_clinic);
-            return $this->SendResponse("Clinic Created.", $data, 201);
+        $created_clinic = ClinicService::CreateClinic(
+            $request->name,
+            $request->address,
+            $request->phone,
+            $request->operating_hours,
+            $request->category_id,
+        );
+        $data = new ClinicResource($created_clinic);
+        return $this->SendResponse("Clinic Created.", $data, 201);
 
     }
 
-    public function update(ClinicUpdateRequest $request, Clinic $clinic) {
+    public function update(ClinicUpdateRequest $request, Clinic $clinic)
+    {
 
-            // Update the user's data using the validated request data
-            $Updated_clinic = ClinicService::UpdateClinic( $clinic ,$request);
-            $data = new ClinicResource($Updated_clinic);
+        // Update the user's data using the validated request data
+        $Updated_clinic = ClinicService::UpdateClinic( $clinic ,$request);
+        $data = new ClinicResource($Updated_clinic);
 
-            return $this->SendResponse("Clinic Updated.", $data, 200);
+        return $this->SendResponse("Clinic Updated.", $data, 200);
 
     }
 
     public function destroy(Clinic $clinic)
     {
 
-            ClinicService::DeleteClinic($clinic);
-            return $this->SendMessage("CLinic Deleted.", 200);
+        ClinicService::DeleteClinic($clinic);
+        return $this->SendMessage("CLinic Deleted.", 200);
 
     }
 

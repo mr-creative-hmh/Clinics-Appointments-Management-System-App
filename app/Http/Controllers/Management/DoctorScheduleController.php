@@ -26,7 +26,7 @@ class DoctorScheduleController extends Controller
     {
 
 
-            return DoctorScheduleResource::collection(DoctorSchedule::all());
+        return DoctorScheduleResource::collection(DoctorSchedule::all());
 
 
     }
@@ -35,52 +35,52 @@ class DoctorScheduleController extends Controller
     public function store(DoctorScheduleCreateRequest $request)
     {
 
-            $result = ManagementService::createSchedules(
-                $request->doctor_id,
-                $request->clinic_id,
-                $request->day_of_week,
-                $request->start_time,
-                $request->end_time,
-            );
+        $result = ManagementService::createSchedules(
+            $request->doctor_id,
+            $request->clinic_id,
+            $request->day_of_week,
+            $request->start_time,
+            $request->end_time,
+        );
 
-            // If an existing schedule is found, return it with a status flag
-            if ($result['status'] === 'exists') {
+        // If an existing schedule is found, return it with a status flag
+        if ($result['status'] === 'exists') {
 
-                $existSchedule = new DoctorScheduleResource($result['schedule']);
+            $existSchedule = new DoctorScheduleResource($result['schedule']);
 
-                return $this->SendResponse("This schedule already exists.", $existSchedule , 409);
-            }
-            elseif ($result['status'] === 'created') {
+            return $this->SendResponse("This schedule already exists.", $existSchedule , 409);
+        }
+        elseif ($result['status'] === 'created') {
 
-                $data = new DoctorScheduleResource($result['schedule']);
+            $data = new DoctorScheduleResource($result['schedule']);
 
-                return $this->SendResponse("Doctor schedule created successfully.", $data, 201);
-            }
+            return $this->SendResponse("Doctor schedule created successfully.", $data, 201);
+        }
 
     }
     public function show(DoctorSchedule $doctorschedule)
     {
 
-            if (!$doctorschedule) {
-                return $this->SendMessage("Doctor schedule is incorrect or Not Exisit.", 404);
-            }
-            return new DoctorScheduleResource($doctorschedule);
+        if (is_null($doctorschedule)) {
+            return $this->SendMessage("Doctor schedule is incorrect or Not Exisit.", 404);
+        }
+        return new DoctorScheduleResource($doctorschedule);
 
     }
 
     public function update(DoctorScheduleUpdateRequest $request, DoctorSchedule $doctorschedule)
     {
 
-            // Update the user's data using the validated request data
-            if (!$doctorschedule) {
-                return $this->SendMessage("doctor Schedule is incorrect or Not Exisit.", 404);
-            }
+        // Update the user's data using the validated request data
+        if (is_null($doctorschedule)) {
+            return $this->SendMessage("doctor Schedule is incorrect or Not Exisit.", 404);
+        }
 
-            $Updated_doctorschedule = ManagementService::updateSchedule( $doctorschedule ,$request);
+        $Updated_doctorschedule = ManagementService::updateSchedule( $doctorschedule ,$request);
 
-            $data = new DoctorScheduleResource($Updated_doctorschedule);
+        $data = new DoctorScheduleResource($Updated_doctorschedule);
 
-            return $this->SendResponse("Doctor schedule Updated.", $data, 200);
+        return $this->SendResponse("Doctor schedule Updated.", $data, 200);
 
 
     }
@@ -88,11 +88,11 @@ class DoctorScheduleController extends Controller
     public function destroy(DoctorSchedule $doctorschedule)
     {
 
-            if ($doctorschedule === []) {
-                return $this->SendMessage("doctor Schedule is incorrect or Not Exisit.", 404);
-            }
-            ManagementService::deleteSchedules($doctorschedule);
-            return $this->SendMessage("Doctor Schedule Deleted.", 200);
+        if (is_null($doctorschedule)) {
+            return $this->SendMessage("doctor Schedule is incorrect or Not Exisit.", 404);
+        }
+        ManagementService::deleteSchedules($doctorschedule);
+        return $this->SendMessage("Doctor Schedule Deleted.", 200);
 
     }
 
