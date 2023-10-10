@@ -66,6 +66,7 @@ class DoctorScheduleController extends Controller
         }
 
     }
+
     public function show(DoctorSchedule $doctorschedule)
     {
 

@@ -38,7 +38,18 @@ class DoctorScheduleCreateRequest extends FormRequest
                 'after:start_time', // Ensure end_time is after start_time
                 //'after_or_equal:start_time(i+15)', // Ensure end_time is at least 15 minutes after start_time
             ],
-            'appointment_duration' => 'required', //if( value > 0 && value % 15 == 0 )
+            'appointment_duration' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    $appointment_duration = $value;
+
+                    // Check if appointment_duration is 15 , 30 , 45 , ..etc
+                    if ($appointment_duration > 0 && $appointment_duration % 15 == 0) {
+                        $fail('The appointment must be 15 or 30 or 45 or 60 min');
+                    }
+
+                },
+            ], //if( value > 0 && value % 15 == 0 )
         ];
     }
 
@@ -57,7 +68,6 @@ class DoctorScheduleCreateRequest extends FormRequest
             'end_time.required' => 'End time is required.',
             'end_time.date_format' => 'Invalid end time format. Use H:i (e.g., 11:00).',
             'end_time.after' => 'The end time must be after the start time.',
-            // 'end_time.after_or_equal' => 'The end time must be at least 15 minutes after the start time.',
             'appointment_duration.required' => 'Appointment Duration is required.',
         ];
     }

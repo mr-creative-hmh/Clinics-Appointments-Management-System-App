@@ -36,27 +36,21 @@ class DoctorScheduleUpdateRequest extends FormRequest
             'end_time' => [
                 'sometimes',
                 'required',
-                'date_format:H:i',
-                function ($attribute, $value, $fail) {
-                    $start_time = $this->input('start_time');
-                    $end_time = $value;
 
-                    $start_time_timestamp = strtotime($start_time);
-                    $end_time_timestamp = strtotime($end_time);
+                'appointment_duration' => [
+                    'sometimes',
+                    'required',
+                    'after:start_time',
+                    function ($attribute, $value, $fail) {
+                        $appointment_duration = $value;
 
-                    // Check if end_time is after start_time
-                    if ($end_time_timestamp <= $start_time_timestamp) {
-                        $fail('The end time must be after the start time.');
-                    }
+                        // Check if appointment_duration is 15 , 30 , 45 , ..etc
+                        if ($appointment_duration > 0 && $appointment_duration % 15 == 0) {
+                            $fail('The appointment must be 15 or 30 or 45 or 60 min');
+                        }
 
-                    // Check if end_time is at least 15 minutes after start_time
-                    if ($end_time_timestamp < ($start_time_timestamp + 15 * 60)) {
-                        $fail('The end time must be at least 15 minutes after the start time.');
-                    }
-                },
-                'appointment_duration' => 'sometimes|required',
-                // 'after:start_time', // Ensure end_time is after start_time
-                // 'after_or_equal:start_time +15 minutes', // Ensure end_time is at least 15 minutes after start_time
+                    },
+                ],
             ],
         ];
     }

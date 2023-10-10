@@ -4,6 +4,7 @@ namespace App\Http\Services\Management;
 
 use App\Models\Management\Appointment;
 use App\Models\Management\DoctorSchedule;
+use App\Models\Management\MedicalRecord;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Illuminate\Http\Request;
@@ -119,6 +120,7 @@ class ManagementService
         // Check if there is an existing appointment for the same doctor_schedule_id and appointment_date
         $existingAppointment = Appointment::where('doctor_schedule_id', $doctor_schedule_id)
             ->where('appointment_date', $appointment_date)
+            ->where('appintment_status',['Scheduled', 'Completed'])
             ->first();
 
         if ($existingAppointment) {
@@ -146,6 +148,26 @@ class ManagementService
 
         return ['status' => 'created', 'appointment' => $createdAppointment];
     }
+
+    //Update Appointment
+    public static function updateAppointment(Appointment $appointment, Request $request)
+    {
+        $appointmentData = $request->validated();
+
+        // Update the Appointment data
+        $appointment->update($appointmentData);
+
+        return $appointment;
+    }
+
+    //Delete Appointment
+    public static function deleteAppointment(Appointment $appointment)
+    {
+        // Delete the Appointment
+        $appointment->delete();
+
+    }
+
 
 
     public static function getAvailableAppointments($doctorSchedule, $date)
@@ -176,24 +198,59 @@ class ManagementService
         return $availableSlots;
     }
 
-    //Update Appointment
-    public static function updateAppointment(Appointment $appointment, Request $request)
+
+
+
+
+     // Medical Record Section
+
+    // Create Medical Record
+    public static function createMedicalRecord($doctor_id, $patient_id, $appointment_id, $medical_condition, $diagnosis, $prescription, $date_of_visit, $follow_up_date, $additional_notes, $active)
     {
-        $appointmentData = $request->validated();
+        // Check if a medical record with the same appointment ID already exists
+        $existingMedicalRecord = MedicalRecord::where('appointment_id', $appointment_id)->first();
+
+        if ($existingMedicalRecord) {
+            // An existing record was found, return it with a status flag and message
+            return ['status' => 'exists', 'record' => $existingMedicalRecord];
+        }
+
+        // Create the medical record if no existing record is found
+        $createdMedicalRecord = MedicalRecord::create([
+            'doctor_id' => $doctor_id,
+            'patient_id' => $patient_id,
+            'appointment_id' => $appointment_id,
+            'medical_condition' => $medical_condition,
+            'diagnosis' => $diagnosis,
+            'prescription' => $prescription,
+            'date_of_visit' => $date_of_visit,
+            'follow_up_date' => $follow_up_date,
+            'additional_notes' => $additional_notes,
+            'active' => $active,
+        ]);
+
+        return ['status' => 'created', 'record' => $createdMedicalRecord];
+    }
+
+    //Update Medical Record
+    public static function updateMedicalRecord(MedicalRecord $medicalrecord, Request $request)
+    {
+        $medicalrecordData = $request->validated();
 
         // Update the Appointment data
-        $appointment->update($appointmentData);
+        $medicalrecord->update($medicalrecordData);
 
-        return $appointment;
+        return $medicalrecord;
     }
 
-
-
-    //Delete Appointment
-    public static function deleteAppointment(Appointment $Appointment)
+    //Delete Medical Record
+    public static function deleteMedicalRecord(MedicalRecord $medicalrecord)
     {
         // Delete the Appointment
-        $Appointment->delete();
+        $medicalrecord->delete();
 
     }
+
+
+
 }

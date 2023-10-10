@@ -4,6 +4,7 @@ use App\Http\Controllers\Clinic\CategoryController;
 use App\Http\Controllers\Clinic\ClinicController;
 use App\Http\Controllers\Management\AppointmentController;
 use App\Http\Controllers\Management\DoctorScheduleController;
+use App\Http\Controllers\Management\MedicalRecordController;
 use App\Http\Controllers\User\Role\DoctorController;
 use App\Http\Controllers\User\Role\PatientController;
 use App\Http\Controllers\User\Role\SecretaryController;
@@ -39,6 +40,7 @@ Route::apiResource("category", CategoryController::class);
 Route::apiResource("clinic", ClinicController::class);
 Route::apiResource("doctorschedule",DoctorScheduleController::class);
 Route::apiResource("appointment", AppointmentController::class);
+Route::apiResource("medicalrecord", MedicalRecordController::class);
 Route::get("appointment/{id}/available-appointments/{date}", [AppointmentController::class, "getAvailableAppointments"]);
 
 //Route::group(['auth:sanctum' => 'role:'], function () { });

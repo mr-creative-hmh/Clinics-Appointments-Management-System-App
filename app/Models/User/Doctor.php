@@ -5,6 +5,7 @@ namespace App\Models\User;
 use App\Models\Clinic\Clinic;
 use App\Models\Common\User;
 use App\Models\Management\DoctorSchedule;
+use App\Models\Management\MedicalRecord;
 use App\Models\User\Specialization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -43,5 +44,10 @@ class Doctor extends Model
     public function doctorSchedules()
     {
         return $this->hasMany(DoctorSchedule::class);
+    }
+
+    public function medicalrecords()
+    {
+        return $this->belongsToMany(MedicalRecord::class);
     }
 }
