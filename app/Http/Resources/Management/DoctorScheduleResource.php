@@ -23,6 +23,7 @@ class DoctorScheduleResource extends JsonResource
             "DayOfWeek" => $this->day_of_week,
             "StartTime" => $this->start_time,
             "EndTime" => $this->end_time,
+            "AppointmentDuration" => $this->appointment_duration,
         ];
     }
 }

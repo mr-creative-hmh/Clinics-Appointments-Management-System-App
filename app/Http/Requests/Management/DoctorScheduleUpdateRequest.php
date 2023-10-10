@@ -54,6 +54,7 @@ class DoctorScheduleUpdateRequest extends FormRequest
                         $fail('The end time must be at least 15 minutes after the start time.');
                     }
                 },
+                'appointment_duration' => 'sometimes|required',
                 // 'after:start_time', // Ensure end_time is after start_time
                 // 'after_or_equal:start_time +15 minutes', // Ensure end_time is at least 15 minutes after start_time
             ],
@@ -74,6 +75,7 @@ class DoctorScheduleUpdateRequest extends FormRequest
             'end_time.date_format' => 'Invalid end time format. Use H:i (e.g., 11:00).',
             // 'end_time.after' => 'The end time must be after the start time.',
             // 'end_time.after_or_equal' => 'The end time must be at least 15 minutes after the start time.',
+            'appointment_duration.required' => 'Appointment Duration is required.',
         ];
     }
 

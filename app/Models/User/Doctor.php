@@ -5,7 +5,7 @@ namespace App\Models\User;
 use App\Models\Clinic\Clinic;
 use App\Models\Common\User;
 use App\Models\Management\DoctorSchedule;
-use App\Models\Specialization;
+use App\Models\User\Specialization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

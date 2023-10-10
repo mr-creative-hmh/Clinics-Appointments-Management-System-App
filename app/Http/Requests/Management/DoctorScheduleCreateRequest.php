@@ -35,26 +35,10 @@ class DoctorScheduleCreateRequest extends FormRequest
             'end_time' => [
                 'required',
                 'date_format:H:i',
-                function ($attribute, $value, $fail) {
-                    $start_time = $this->input('start_time');
-                    $end_time = $value;
-
-                    $start_time_timestamp = strtotime($start_time);
-                    $end_time_timestamp = strtotime($end_time);
-
-                    // Check if end_time is after start_time
-                    if ($end_time_timestamp <= $start_time_timestamp) {
-                        $fail('The end time must be after the start time.');
-                    }
-
-                    // Check if end_time is at least 15 minutes after start_time
-                    if ($end_time_timestamp < ($start_time_timestamp + 15 * 60)) {
-                        $fail('The end time must be at least 15 minutes after the start time.');
-                    }
-                },
-                //'after:start_time', // Ensure end_time is after start_time
+                'after:start_time', // Ensure end_time is after start_time
                 //'after_or_equal:start_time(i+15)', // Ensure end_time is at least 15 minutes after start_time
             ],
+            'appointment_duration' => 'required', //if( value > 0 && value % 15 == 0 )
         ];
     }
 
@@ -72,8 +56,9 @@ class DoctorScheduleCreateRequest extends FormRequest
             'start_time.date_format' => 'Invalid start time format. Use H:i (e.g., 09:00).',
             'end_time.required' => 'End time is required.',
             'end_time.date_format' => 'Invalid end time format. Use H:i (e.g., 11:00).',
-            // 'end_time.after' => 'The end time must be after the start time.',
+            'end_time.after' => 'The end time must be after the start time.',
             // 'end_time.after_or_equal' => 'The end time must be at least 15 minutes after the start time.',
+            'appointment_duration.required' => 'Appointment Duration is required.',
         ];
     }
 

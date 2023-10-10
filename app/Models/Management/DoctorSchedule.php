@@ -2,6 +2,7 @@
 
 namespace App\Models\Management;
 
+use App\Models\Clinic\Clinic;
 use App\Models\User\Doctor;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,6 +17,7 @@ class DoctorSchedule extends Model
         'day_of_week',
         'start_time',
         'end_time',
+        'appointment_duration',
     ];
 
     public function doctor()

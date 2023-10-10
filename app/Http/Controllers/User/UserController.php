@@ -30,6 +30,10 @@ class UserController extends Controller
     public function show(User $user)
     {
 
+        // if($user->roles->first()) {
+        //     return $this->sendMessage("Your don't have permission", 401);
+        // }
+
         if (is_null($user)) {
             return $this->SendMessage("User is incorrect or Not Exisit.", 404);
         }

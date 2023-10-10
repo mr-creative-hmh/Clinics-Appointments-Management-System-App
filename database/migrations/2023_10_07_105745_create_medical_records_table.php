@@ -13,7 +13,21 @@ return new class extends Migration
     {
         Schema::create('medical_records', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('doctor_id');
+            $table->unsignedBigInteger('patient_id');
+            $table->unsignedBigInteger('appointment_id');
+            $table->text('medical_condition')->nullable();
+            $table->text('diagnosis')->nullable();
+            $table->text('prescription')->nullable();
+            $table->date('date_of_visit')->nullable();
+            $table->date('follow_up_date')->nullable();
+            $table->text('additional_notes')->nullable();
+            $table->tinyInteger('active')->default(1);
             $table->timestamps();
+
+            $table->foreign('doctor_id')->references('id')->on('doctors');
+            $table->foreign('patient_id')->references('id')->on('patients');
+            $table->foreign('appointment_id')->references('id')->on('appointments');
         });
     }
 

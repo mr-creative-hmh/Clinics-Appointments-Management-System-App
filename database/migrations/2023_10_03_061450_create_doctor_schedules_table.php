@@ -16,8 +16,9 @@ return new class extends Migration
             $table->unsignedBigInteger('doctor_id');
             $table->unsignedBigInteger('clinic_id');
             $table->enum('day_of_week', ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']);
-            $table->time('start_time')->nullable();
-            $table->time('end_time')->nullable();
+            $table->time('start_time');
+            $table->time('end_time');
+            $table->integer('appointment_duration');
             $table->timestamps();
 
             $table->foreign('doctor_id')->references('id')->on('doctors')->onDelete('cascade');

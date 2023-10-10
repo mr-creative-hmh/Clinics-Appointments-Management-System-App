@@ -25,9 +25,7 @@ class DoctorScheduleController extends Controller
     public function index()
     {
 
-
         return DoctorScheduleResource::collection(DoctorSchedule::all());
-
 
     }
 
@@ -41,6 +39,7 @@ class DoctorScheduleController extends Controller
             $request->day_of_week,
             $request->start_time,
             $request->end_time,
+            $request->appointment_duration,
         );
 
         // If an existing schedule is found, return it with a status flag
@@ -50,6 +49,15 @@ class DoctorScheduleController extends Controller
 
             return $this->SendResponse("This schedule already exists.", $existSchedule , 409);
         }
+
+        // If an existing schedule conflict, return it with a status flag
+        if ($result['status'] === 'conflict') {
+
+            $conflictSchedule = new DoctorScheduleResource($result['schedule']);
+
+            return $this->SendResponse("This schedule conflict with other exist one.", $conflictSchedule , 409);
+        }
+
         elseif ($result['status'] === 'created') {
 
             $data = new DoctorScheduleResource($result['schedule']);
@@ -87,11 +95,10 @@ class DoctorScheduleController extends Controller
 
     public function destroy(DoctorSchedule $doctorschedule)
     {
-
         if (is_null($doctorschedule)) {
             return $this->SendMessage("doctor Schedule is incorrect or Not Exisit.", 404);
         }
-        ManagementService::deleteSchedules($doctorschedule);
+        ManagementService::deleteSchedule($doctorschedule);
         return $this->SendMessage("Doctor Schedule Deleted.", 200);
 
     }

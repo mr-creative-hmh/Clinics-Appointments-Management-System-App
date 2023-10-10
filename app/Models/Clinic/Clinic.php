@@ -2,6 +2,7 @@
 
 namespace App\Models\Clinic;
 
+use App\Models\Management\DoctorSchedule;
 use App\Models\User\Doctor;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

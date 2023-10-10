@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('doctor_schedule_id');
             $table->unsignedBigInteger('patient_id');
-            $table->datetime('appointment_date');
-            $table->unsignedBigInteger('appointment_status');
+            $table->dateTime('appointment_date');
+            $table->enum('appointment_type', ['Normal', 'Follow-Up', 'Re-Scheduled']);
+            $table->enum('appointment_status', ['Scheduled', 'Cancelled', 'Completed']);
             $table->text('reason_for_visit')->nullable();
             $table->timestamps();
 
