@@ -111,22 +111,28 @@ class ManagementService
     }
 
     // Create Appointment
-    public static function createAppointment($doctor_schedule_id,$patient_id,$appointment_date,$appointment_type,$appointment_status,$reason_for_visit)
+    public static function createAppointment($doctor_schedule_id, $patient_id, $appointment_date, $appointment_type, $appointment_status, $reason_for_visit)
     {
-
         // Retrieve the doctor schedule for the given $doctor_schedule_id
         $doctorSchedule = DoctorSchedule::find($doctor_schedule_id);
 
-        // Check if there is an existing appointment for the same doctor_schedule_id and appointment_date
-        $existingAppointment = Appointment::where('doctor_schedule_id', $doctor_schedule_id)
-            ->where('appointment_date', $appointment_date)
-            ->where('appintment_status',['Scheduled', 'Completed'])
-            ->first();
 
-        if ($existingAppointment) {
-            // Handle the case where an appointment already exists
-            return ['status' => 'exists', 'appointment' => $existingAppointment];
+        // Check if there are any existing appointments for the same doctor_schedule_id, appointment_date, and specified statuses
+        $existingAppointments = Appointment::where('doctor_schedule_id', $doctor_schedule_id)
+            ->where('appointment_date', $appointment_date)
+            ->whereIn('appointment_status', ['Scheduled', 'Completed'])
+            ->get();
+
+        foreach ($existingAppointments as $existingAppointment) {
+
+            $existingTime = Carbon::parse($existingAppointment->appointment_date)->format('H:i:s');
+            $inputTime = Carbon::parse($appointment_date)->format('H:i:s');
+
+            if ($existingTime === $inputTime) {
+                return ['status' => 'exists', 'appointment' => $existingAppointment];
+            }
         }
+
         $carbonDate = Carbon::parse($appointment_date);
         $appointment_day = $carbonDate->format('l');
 
@@ -136,7 +142,7 @@ class ManagementService
             return ['status' => 'invalid_day', 'message' => 'Appointment day does not match the doctor\'s schedule.'];
         }
 
-        // If no existing appointment is found, create a new appointment
+        // If no existing appointments are found, create a new appointment
         $createdAppointment = Appointment::create([
             "doctor_schedule_id" => $doctor_schedule_id,
             "patient_id" => $patient_id,
@@ -148,7 +154,6 @@ class ManagementService
 
         return ['status' => 'created', 'appointment' => $createdAppointment];
     }
-
     //Update Appointment
     public static function updateAppointment(Appointment $appointment, Request $request)
     {

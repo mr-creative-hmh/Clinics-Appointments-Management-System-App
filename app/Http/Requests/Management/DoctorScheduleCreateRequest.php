@@ -43,11 +43,10 @@ class DoctorScheduleCreateRequest extends FormRequest
                 function ($attribute, $value, $fail) {
                     $appointment_duration = $value;
 
-                    // Check if appointment_duration is 15 , 30 , 45 , ..etc
-                    if ($appointment_duration > 0 && $appointment_duration % 15 == 0) {
-                        $fail('The appointment must be 15 or 30 or 45 or 60 min');
+                    // Check if appointment_duration is a positive multiple of 15
+                    if ($appointment_duration > 0 && $appointment_duration % 15 !== 0) {
+                        $fail('The appointment duration must be a positive multiple of 15.');
                     }
-
                 },
             ], //if( value > 0 && value % 15 == 0 )
         ];
